@@ -7,6 +7,7 @@ import {
   Users,
   Newspaper,
   Award,
+  Settings,
   ChevronLeft,
   ChevronRight,
   X,
@@ -38,6 +39,7 @@ export function AdminSidebar({
     { label: 'Directorio', href: '/admin/directorio', icon: Users },
     { label: 'Noticias', href: '/admin/noticias', icon: Newspaper },
     { label: 'Homenajes', href: '/admin/homenajes', icon: Award },
+    { label: 'Configuración', href: '/admin/configuracion', icon: Settings },
   ];
 
   return (

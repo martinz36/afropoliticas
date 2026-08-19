@@ -4,8 +4,19 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Users, Newspaper, Award, Home, Lock } from 'lucide-react';
+import Image from 'next/image';
 
-export function PublicHeader() {
+interface PublicHeaderProps {
+  logoUrl?: string | null;
+  siteTitle?: string;
+  siteSubtitle?: string | null;
+}
+
+export function PublicHeader({
+  logoUrl,
+  siteTitle = 'Afropolíticas',
+  siteSubtitle = 'Pensamiento y Memoria',
+}: PublicHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -26,17 +37,34 @@ export function PublicHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-600 to-amber-700 text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-            A
-          </div>
-          <div className="flex flex-col">
-            <span className="font-black text-lg sm:text-xl tracking-tight text-slate-100 group-hover:text-amber-400 transition-colors">
-              Afropolíticas
-            </span>
-            <span className="text-[10px] tracking-widest uppercase font-semibold text-amber-500/90 -mt-1">
-              Pensamiento y Memoria
-            </span>
-          </div>
+          {logoUrl ? (
+            <div className="relative h-10 sm:h-12 w-auto min-w-[120px] flex items-center">
+              <Image
+                src={logoUrl}
+                alt={siteTitle}
+                width={180}
+                height={48}
+                className="object-contain max-h-12 w-auto group-hover:scale-105 transition-transform"
+                unoptimized
+              />
+            </div>
+          ) : (
+            <>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-600 to-amber-700 text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                {siteTitle.charAt(0)}
+              </div>
+              <div className="flex flex-col">
+                <span className="font-black text-lg sm:text-xl tracking-tight text-slate-100 group-hover:text-amber-400 transition-colors">
+                  {siteTitle}
+                </span>
+                {siteSubtitle && (
+                  <span className="text-[10px] tracking-widest uppercase font-semibold text-amber-500/90 -mt-1">
+                    {siteSubtitle}
+                  </span>
+                )}
+              </div>
+            </>
+          )}
         </Link>
 
         {/* Desktop Navigation Links */}

@@ -1,45 +1,74 @@
 import Link from 'next/link';
 import { Users, Newspaper, Award, ArrowRight, Sparkles } from 'lucide-react';
+import { getSiteSettingsAction } from '@/actions/settings-actions';
+import { CldImageWrapper } from '@/components/public/CldImageWrapper';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const settings = await getSiteSettingsAction();
+
   return (
-    <div className="flex-1 flex flex-col space-y-16 py-8 sm:py-16">
+    <div className="flex-1 flex flex-col space-y-16 py-8 sm:py-12">
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full text-center space-y-6 pt-4">
-        {/* Glow Accent */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-8 pt-4">
+        {/* Glow Background Accent */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>Plataforma de Investigación y Visibilización</span>
+        {/* Text Header */}
+        <div className="text-center space-y-6 max-w-4xl mx-auto relative z-10">
+          {settings.heroBadge && (
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>{settings.heroBadge}</span>
+            </div>
+          )}
+
+          <h1 className="text-4xl sm:text-6xl font-black text-slate-100 tracking-tight leading-tight">
+            {settings.heroTitle || 'Pensamiento, Saberes y Memoria Afropolitana'}
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            {settings.heroSubtitle ||
+              'Un espacio dedicado al directorio de investigadoras y referentes, la difusión de noticias y el reconocimiento histórico de líderes afropolitanos.'}
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <Link
+              href="/directorio"
+              className="px-6 py-3.5 rounded-xl font-bold text-xs text-slate-950 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 shadow-lg shadow-amber-500/25 transition-all flex items-center space-x-2 cursor-pointer"
+            >
+              <span>Explorar Directorio</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/noticias"
+              className="px-6 py-3.5 rounded-xl font-semibold text-xs text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all cursor-pointer"
+            >
+              Ver Noticias
+            </Link>
+          </div>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-black text-slate-100 tracking-tight max-w-4xl mx-auto leading-tight">
-          Pensamiento, Saberes y{' '}
-          <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
-            Memoria Afropolitana
-          </span>
-        </h1>
+        {/* Impactful Hero Community Banner (Inspired by C.N.O.A. reference image) */}
+        {settings.heroImageUrl && (
+          <div className="relative w-full h-72 sm:h-[420px] rounded-3xl overflow-hidden border border-slate-800 shadow-2xl group">
+            <CldImageWrapper
+              src={settings.heroImageUrl}
+              alt="Colectivo Afropolíticas"
+              fill
+              priority
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            {/* Subtle Modern Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
 
-        <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Un espacio dedicado al directorio de investigadoras y referentes, la difusión de noticias y el reconocimiento histórico de líderes afropolitanos.
-        </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-          <Link
-            href="/directorio"
-            className="px-6 py-3.5 rounded-xl font-bold text-xs text-slate-950 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 shadow-lg shadow-amber-500/25 transition-all flex items-center space-x-2"
-          >
-            <span>Explorar Directorio</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/noticias"
-            className="px-6 py-3.5 rounded-xl font-semibold text-xs text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all"
-          >
-            Ver Noticias
-          </Link>
-        </div>
+            <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between z-10">
+              <div className="bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-xl border border-slate-800/80 text-xs font-semibold text-slate-200 hidden sm:flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span>Comunidad, Pensamiento Colectivo y Memoria Viva</span>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Feature Cards Grid */}
