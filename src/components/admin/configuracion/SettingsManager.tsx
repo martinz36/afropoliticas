@@ -6,16 +6,19 @@ import {
   Palette,
   Image as ImageIcon,
   Layout,
+  Cloud,
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Sparkles,
   Check,
+  Eye,
+  EyeOff,
+  Key,
+  Info,
 } from 'lucide-react';
 import { SelectSiteSettings } from '@/db/schema';
 import { updateSiteSettingsAction } from '@/actions/settings-actions';
 import { ImageUpload } from '@/components/ui/ImageUpload';
-import Image from 'next/image';
 
 interface SettingsManagerProps {
   initialSettings: SelectSiteSettings;
@@ -67,6 +70,7 @@ const COLOR_PALETTES = [
 export function SettingsManager({ initialSettings }: SettingsManagerProps) {
   const [isPending, startTransition] = useTransition();
   const [toastMessage, setToastMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showApiSecret, setShowApiSecret] = useState(false);
 
   // Form states
   const [siteTitle, setSiteTitle] = useState(initialSettings.siteTitle || 'Afropolíticas');
@@ -83,6 +87,12 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
     initialSettings.heroImageUrl ||
       'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80'
   );
+
+  // Cloudinary credentials states
+  const [cloudinaryCloudName, setCloudinaryCloudName] = useState(initialSettings.cloudinaryCloudName || '');
+  const [cloudinaryApiKey, setCloudinaryApiKey] = useState(initialSettings.cloudinaryApiKey || '');
+  const [cloudinaryApiSecret, setCloudinaryApiSecret] = useState(initialSettings.cloudinaryApiSecret || '');
+  const [cloudinaryUploadPreset, setCloudinaryUploadPreset] = useState(initialSettings.cloudinaryUploadPreset || '');
 
   const showToast = (type: 'success' | 'error', text: string) => {
     setToastMessage({ type, text });
@@ -101,10 +111,14 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         heroTitle,
         heroSubtitle,
         heroImageUrl,
+        cloudinaryCloudName,
+        cloudinaryApiKey,
+        cloudinaryApiSecret,
+        cloudinaryUploadPreset,
       });
 
       if (res.success) {
-        showToast('success', 'Configuración del sitio actualizada correctamente.');
+        showToast('success', 'Configuración del sitio y credenciales de Cloudinary actualizadas correctamente.');
       } else {
         showToast('error', res.error || 'Error al guardar la configuración.');
       }
@@ -139,10 +153,10 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
             <span>Configuración General</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-100">
-            Personalización del Sitio
+            Personalización del Sitio y Cloudinary API
           </h2>
           <p className="text-xs text-slate-400">
-            Modifica el logo, la paleta cromática global y el Hero principal del portal.
+            Configura las credenciales de la API de Cloudinary, el logo, la paleta cromática global y el Hero.
           </p>
         </div>
 
@@ -165,7 +179,106 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         </button>
       </div>
 
-      {/* 1. SECCIÓN: LOGO E IDENTIDAD VISUAL */}
+      {/* SECCIÓN: CONFIGURACIÓN DE LA API DE CLOUDINARY */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
+        <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
+          <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center">
+            <Cloud className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-slate-100">Credenciales de la API de Cloudinary</h3>
+            <p className="text-xs text-slate-400">
+              Ingresa tus claves de Cloudinary para que todas las imágenes del sitio se suban directamente a tu cuenta.
+            </p>
+          </div>
+        </div>
+
+        {/* Guía informativa */}
+        <div className="p-4 rounded-xl bg-sky-950/40 border border-sky-500/20 text-xs text-sky-200 space-y-2">
+          <div className="flex items-center space-x-2 font-bold text-sky-300">
+            <Info className="w-4 h-4" />
+            <span>¿Dónde encontrar estas credenciales?</span>
+          </div>
+          <p className="leading-relaxed text-slate-300">
+            Inicia sesión en tu consola de <strong>Cloudinary</strong>. En el <strong>Dashboard</strong> encontrarás tu <em>Cloud Name</em>, <em>API Key</em> y <em>API Secret</em>. En <strong>Settings ⚙️ → Upload → Upload Presets</strong> crea un preset de modo <strong>Unsigned</strong> para habilitar las cargas desde el navegador.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Cloud Name */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold uppercase text-slate-400">
+              Cloud Name *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={cloudinaryCloudName}
+                onChange={(e) => setCloudinaryCloudName(e.target.value)}
+                placeholder="ej. afropoliticas"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+
+          {/* Upload Preset */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold uppercase text-slate-400">
+              Upload Preset (Unsigned) *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={cloudinaryUploadPreset}
+                onChange={(e) => setCloudinaryUploadPreset(e.target.value)}
+                placeholder="ej. afropoliticas_uploads"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+
+          {/* API Key */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold uppercase text-slate-400 flex items-center space-x-1">
+              <Key className="w-3.5 h-3.5 text-amber-400" />
+              <span>API Key</span>
+            </label>
+            <input
+              type="text"
+              value={cloudinaryApiKey}
+              onChange={(e) => setCloudinaryApiKey(e.target.value)}
+              placeholder="ej. 123456789012345"
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
+
+          {/* API Secret */}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold uppercase text-slate-400 flex items-center space-x-1">
+              <Key className="w-3.5 h-3.5 text-rose-400" />
+              <span>API Secret</span>
+            </label>
+            <div className="relative">
+              <input
+                type={showApiSecret ? 'text' : 'password'}
+                value={cloudinaryApiSecret}
+                onChange={(e) => setCloudinaryApiSecret(e.target.value)}
+                placeholder="••••••••••••••••••••••••••••"
+                className="w-full pl-4 pr-10 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => setShowApiSecret(!showApiSecret)}
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200"
+              >
+                {showApiSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* SECCIÓN: LOGO E IDENTIDAD VISUAL */}
       <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
         <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
           <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
@@ -174,7 +287,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
           <div>
             <h3 className="text-lg font-bold text-slate-100">Identidad y Logo Personalizado</h3>
             <p className="text-xs text-slate-400">
-              Sube una imagen de logo para reemplazar el texto predeterminado <code>[A] Afropolíticas Pensamiento y Memoria</code>.
+              Sube una imagen de logo para reemplazar la marca predeterminada <code>[A] Afropolíticas Pensamiento y Memoria</code>.
             </p>
           </div>
         </div>
@@ -188,6 +301,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
               value={logoUrl}
               onUpload={(url) => setLogoUrl(url)}
               onRemove={() => setLogoUrl('')}
+              uploadPreset={cloudinaryUploadPreset || undefined}
             />
             <p className="text-[11px] text-slate-500">
               Formato recomendado: PNG transparente o SVG.
@@ -223,7 +337,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         </div>
       </div>
 
-      {/* 2. SECCIÓN: PALETA DE COLORES GLOBAL */}
+      {/* SECCIÓN: PALETA DE COLORES GLOBAL */}
       <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
         <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
           <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
@@ -281,7 +395,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         </div>
       </div>
 
-      {/* 3. SECCIÓN: HERO EDITABLE CON IMAGEN BANNER DE COMUNIDAD */}
+      {/* SECCIÓN: HERO EDITABLE CON IMAGEN BANNER DE COMUNIDAD */}
       <div className="p-6 sm:p-8 rounded-2xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-6">
         <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
           <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
@@ -305,6 +419,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
               value={heroImageUrl}
               onUpload={(url) => setHeroImageUrl(url)}
               onRemove={() => setHeroImageUrl('')}
+              uploadPreset={cloudinaryUploadPreset || undefined}
             />
             <p className="text-[11px] text-slate-500">
               Recomendación: Sube una foto panorámica de comunidad, evento o colectivo afropolitano.

@@ -48,7 +48,7 @@ export const tributes = pgTable('tribute', {
 
 /**
  * 5. SiteSettings Schema (Configuración General)
- * (id, site_title, site_subtitle, logo_url, color_palette, hero_badge, hero_title, hero_subtitle, hero_image_url, updated_at)
+ * (id, site_title, site_subtitle, logo_url, color_palette, hero_badge, hero_title, hero_subtitle, hero_image_url, cloudinary_cloud_name, cloudinary_api_key, cloudinary_api_secret, cloudinary_upload_preset, updated_at)
  */
 export const siteSettings = pgTable('site_settings', {
   id: serial('id').primaryKey(),
@@ -60,6 +60,10 @@ export const siteSettings = pgTable('site_settings', {
   heroTitle: text('hero_title').default('Pensamiento, Saberes y Memoria Afropolitana'),
   heroSubtitle: text('hero_subtitle').default('Un espacio dedicado al directorio de investigadoras y referentes, la difusión de noticias y el reconocimiento histórico de líderes afropolitanos.'),
   heroImageUrl: text('hero_image_url'),
+  cloudinaryCloudName: text('cloudinary_cloud_name'),
+  cloudinaryApiKey: text('cloudinary_api_key'),
+  cloudinaryApiSecret: text('cloudinary_api_secret'),
+  cloudinaryUploadPreset: text('cloudinary_upload_preset'),
   updatedAt: timestamp('updated_at', { mode: 'date' }).defaultNow().notNull(),
 });
 

@@ -13,6 +13,10 @@ export interface SiteSettingsInput {
   heroTitle?: string | null;
   heroSubtitle?: string | null;
   heroImageUrl?: string | null;
+  cloudinaryCloudName?: string | null;
+  cloudinaryApiKey?: string | null;
+  cloudinaryApiSecret?: string | null;
+  cloudinaryUploadPreset?: string | null;
 }
 
 const DEFAULT_SETTINGS: SelectSiteSettings = {
@@ -27,6 +31,10 @@ const DEFAULT_SETTINGS: SelectSiteSettings = {
     'Un espacio dedicado al directorio de investigadoras y referentes, la difusión de noticias y el reconocimiento histórico de líderes afropolitanos.',
   heroImageUrl:
     'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80',
+  cloudinaryCloudName: null,
+  cloudinaryApiKey: null,
+  cloudinaryApiSecret: null,
+  cloudinaryUploadPreset: null,
   updatedAt: new Date(),
 };
 
@@ -50,6 +58,10 @@ export async function getSiteSettingsAction(): Promise<SelectSiteSettings> {
         heroTitle: DEFAULT_SETTINGS.heroTitle,
         heroSubtitle: DEFAULT_SETTINGS.heroSubtitle,
         heroImageUrl: DEFAULT_SETTINGS.heroImageUrl,
+        cloudinaryCloudName: DEFAULT_SETTINGS.cloudinaryCloudName,
+        cloudinaryApiKey: DEFAULT_SETTINGS.cloudinaryApiKey,
+        cloudinaryApiSecret: DEFAULT_SETTINGS.cloudinaryApiSecret,
+        cloudinaryUploadPreset: DEFAULT_SETTINGS.cloudinaryUploadPreset,
       })
       .returning();
 
@@ -82,6 +94,10 @@ export async function updateSiteSettingsAction(data: SiteSettingsInput) {
           heroTitle: data.heroTitle?.trim() || null,
           heroSubtitle: data.heroSubtitle?.trim() || null,
           heroImageUrl: data.heroImageUrl || null,
+          cloudinaryCloudName: data.cloudinaryCloudName?.trim() || null,
+          cloudinaryApiKey: data.cloudinaryApiKey?.trim() || null,
+          cloudinaryApiSecret: data.cloudinaryApiSecret?.trim() || null,
+          cloudinaryUploadPreset: data.cloudinaryUploadPreset?.trim() || null,
           updatedAt: new Date(),
         })
         .where(eq(siteSettings.id, existing[0].id))
@@ -99,6 +115,10 @@ export async function updateSiteSettingsAction(data: SiteSettingsInput) {
           heroTitle: data.heroTitle?.trim() || null,
           heroSubtitle: data.heroSubtitle?.trim() || null,
           heroImageUrl: data.heroImageUrl || null,
+          cloudinaryCloudName: data.cloudinaryCloudName?.trim() || null,
+          cloudinaryApiKey: data.cloudinaryApiKey?.trim() || null,
+          cloudinaryApiSecret: data.cloudinaryApiSecret?.trim() || null,
+          cloudinaryUploadPreset: data.cloudinaryUploadPreset?.trim() || null,
         })
         .returning();
       updated = res;
