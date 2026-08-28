@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CldUploadWidget } from 'next-cloudinary';
 import { ImagePlus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useCloudinarySettings } from '@/components/admin/CloudinarySettingsContext';
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -12,6 +13,7 @@ interface ImageUploadProps {
   onRemove?: (url: string) => void;
   value?: string;
   uploadPreset?: string;
+  cloudName?: string;
 }
 
 export function ImageUpload({
@@ -20,13 +22,27 @@ export function ImageUpload({
   onUpload,
   onRemove,
   value = '',
-  uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'afropoliticas_uploads',
+  uploadPreset: customPreset,
+  cloudName: customCloudName,
 }: ImageUploadProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const contextSettings = useCloudinarySettings();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const effectiveCloudName =
+    customCloudName ||
+    contextSettings.cloudName ||
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+    'afropoliticas';
+
+  const effectiveUploadPreset =
+    customPreset ||
+    contextSettings.uploadPreset ||
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ||
+    'afropoliticas_uploads';
 
   const handleUploadSuccess = (result: any) => {
     const secureUrl = result?.info?.secure_url;
@@ -60,7 +76,7 @@ export function ImageUpload({
                 type="button"
                 onClick={() => onRemove(value)}
                 disabled={disabled}
-                className="p-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                className="p-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer"
                 title="Eliminar imagen"
               >
                 <Trash2 className="w-5 h-5" />
@@ -73,8 +89,10 @@ export function ImageUpload({
       {/* Widget de subida de Cloudinary */}
       <CldUploadWidget
         onSuccess={handleUploadSuccess}
-        uploadPreset={uploadPreset}
+        uploadPreset={effectiveUploadPreset}
         options={{
+          cloudName: effectiveCloudName,
+          uploadPreset: effectiveUploadPreset,
           maxFiles: 1,
           resourceType: 'image',
           sources: ['local', 'url', 'camera'],
