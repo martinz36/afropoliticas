@@ -31,10 +31,10 @@ const DEFAULT_SETTINGS: SelectSiteSettings = {
     'Un espacio dedicado al directorio de investigadoras y referentes, la difusión de noticias y el reconocimiento histórico de líderes afropolitanos.',
   heroImageUrl:
     'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80',
-  cloudinaryCloudName: null,
-  cloudinaryApiKey: null,
+  cloudinaryCloudName: 'dmhg7tph',
+  cloudinaryApiKey: '216771112977243',
   cloudinaryApiSecret: null,
-  cloudinaryUploadPreset: null,
+  cloudinaryUploadPreset: 'ml_default',
   updatedAt: new Date(),
 };
 
@@ -43,7 +43,13 @@ export async function getSiteSettingsAction(): Promise<SelectSiteSettings> {
     const existing = await db.select().from(siteSettings).limit(1);
 
     if (existing.length > 0) {
-      return existing[0];
+      const row = existing[0];
+      return {
+        ...row,
+        cloudinaryCloudName: row.cloudinaryCloudName || 'dmhg7tph',
+        cloudinaryApiKey: row.cloudinaryApiKey || '216771112977243',
+        cloudinaryUploadPreset: row.cloudinaryUploadPreset || 'ml_default',
+      };
     }
 
     // Si no existen ajustes, creamos el registro por defecto
@@ -94,10 +100,10 @@ export async function updateSiteSettingsAction(data: SiteSettingsInput) {
           heroTitle: data.heroTitle?.trim() || null,
           heroSubtitle: data.heroSubtitle?.trim() || null,
           heroImageUrl: data.heroImageUrl || null,
-          cloudinaryCloudName: data.cloudinaryCloudName?.trim() || null,
-          cloudinaryApiKey: data.cloudinaryApiKey?.trim() || null,
+          cloudinaryCloudName: data.cloudinaryCloudName?.trim() || 'dmhg7tph',
+          cloudinaryApiKey: data.cloudinaryApiKey?.trim() || '216771112977243',
           cloudinaryApiSecret: data.cloudinaryApiSecret?.trim() || null,
-          cloudinaryUploadPreset: data.cloudinaryUploadPreset?.trim() || null,
+          cloudinaryUploadPreset: data.cloudinaryUploadPreset?.trim() || 'ml_default',
           updatedAt: new Date(),
         })
         .where(eq(siteSettings.id, existing[0].id))
@@ -115,10 +121,10 @@ export async function updateSiteSettingsAction(data: SiteSettingsInput) {
           heroTitle: data.heroTitle?.trim() || null,
           heroSubtitle: data.heroSubtitle?.trim() || null,
           heroImageUrl: data.heroImageUrl || null,
-          cloudinaryCloudName: data.cloudinaryCloudName?.trim() || null,
-          cloudinaryApiKey: data.cloudinaryApiKey?.trim() || null,
+          cloudinaryCloudName: data.cloudinaryCloudName?.trim() || 'dmhg7tph',
+          cloudinaryApiKey: data.cloudinaryApiKey?.trim() || '216771112977243',
           cloudinaryApiSecret: data.cloudinaryApiSecret?.trim() || null,
-          cloudinaryUploadPreset: data.cloudinaryUploadPreset?.trim() || null,
+          cloudinaryUploadPreset: data.cloudinaryUploadPreset?.trim() || 'ml_default',
         })
         .returning();
       updated = res;

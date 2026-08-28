@@ -89,10 +89,10 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
   );
 
   // Cloudinary credentials states
-  const [cloudinaryCloudName, setCloudinaryCloudName] = useState(initialSettings.cloudinaryCloudName || '');
-  const [cloudinaryApiKey, setCloudinaryApiKey] = useState(initialSettings.cloudinaryApiKey || '');
+  const [cloudinaryCloudName, setCloudinaryCloudName] = useState(initialSettings.cloudinaryCloudName || 'dmhg7tph');
+  const [cloudinaryApiKey, setCloudinaryApiKey] = useState(initialSettings.cloudinaryApiKey || '216771112977243');
   const [cloudinaryApiSecret, setCloudinaryApiSecret] = useState(initialSettings.cloudinaryApiSecret || '');
-  const [cloudinaryUploadPreset, setCloudinaryUploadPreset] = useState(initialSettings.cloudinaryUploadPreset || '');
+  const [cloudinaryUploadPreset, setCloudinaryUploadPreset] = useState(initialSettings.cloudinaryUploadPreset || 'ml_default');
 
   const showToast = (type: 'success' | 'error', text: string) => {
     setToastMessage({ type, text });
@@ -200,7 +200,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
             <span>¿Dónde encontrar estas credenciales?</span>
           </div>
           <p className="leading-relaxed text-slate-300">
-            Inicia sesión en tu consola de <strong>Cloudinary</strong>. En el <strong>Dashboard</strong> encontrarás tu <em>Cloud Name</em>, <em>API Key</em> y <em>API Secret</em>. En <strong>Settings ⚙️ → Upload → Upload Presets</strong> crea un preset de modo <strong>Unsigned</strong> para habilitar las cargas desde el navegador.
+            Inicia sesión en tu consola de <strong>Cloudinary</strong>. En el <strong>Dashboard</strong> encontrarás tu <em>Cloud Name</em> (ej. <code>dmhg7tph</code>), <em>API Key</em> (ej. <code>216771112977243</code>) y <em>API Secret</em>. En <strong>Settings ⚙️ → Upload → Upload Presets</strong> usa tu preset Unsigned (ej. <code>ml_default</code>).
           </p>
         </div>
 
@@ -215,8 +215,8 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
                 type="text"
                 value={cloudinaryCloudName}
                 onChange={(e) => setCloudinaryCloudName(e.target.value)}
-                placeholder="ej. afropoliticas"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                placeholder="ej. dmhg7tph"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
               />
             </div>
           </div>
@@ -231,8 +231,8 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
                 type="text"
                 value={cloudinaryUploadPreset}
                 onChange={(e) => setCloudinaryUploadPreset(e.target.value)}
-                placeholder="ej. afropoliticas_uploads"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                placeholder="ej. ml_default"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
               />
             </div>
           </div>
@@ -247,8 +247,8 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
               type="text"
               value={cloudinaryApiKey}
               onChange={(e) => setCloudinaryApiKey(e.target.value)}
-              placeholder="ej. 123456789012345"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              placeholder="ej. 216771112977243"
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
             />
           </div>
 
@@ -301,7 +301,8 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
               value={logoUrl}
               onUpload={(url) => setLogoUrl(url)}
               onRemove={() => setLogoUrl('')}
-              uploadPreset={cloudinaryUploadPreset || undefined}
+              uploadPreset={cloudinaryUploadPreset || 'ml_default'}
+              cloudName={cloudinaryCloudName || 'dmhg7tph'}
             />
             <p className="text-[11px] text-slate-500">
               Formato recomendado: PNG transparente o SVG.
@@ -419,7 +420,8 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
               value={heroImageUrl}
               onUpload={(url) => setHeroImageUrl(url)}
               onRemove={() => setHeroImageUrl('')}
-              uploadPreset={cloudinaryUploadPreset || undefined}
+              uploadPreset={cloudinaryUploadPreset || 'ml_default'}
+              cloudName={cloudinaryCloudName || 'dmhg7tph'}
             />
             <p className="text-[11px] text-slate-500">
               Recomendación: Sube una foto panorámica de comunidad, evento o colectivo afropolitano.
